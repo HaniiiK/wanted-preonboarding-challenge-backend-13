@@ -7,15 +7,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Theater {
 
-    public void enter(Audience audience, TicketSeller ticketSeller){
-        if(audience.getBag().hasInvitation()){
-            Ticket ticket = ticketSeller.getTicketOffice().getTicket();
-            audience.getBag().setTicket(ticket);
-        }else {
-            Ticket ticket = ticketSeller.getTicketOffice().getTicket();
-            audience.getBag().minusAmount(ticket.getFee());
-            ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+    public void enter(Audience audience, Ticket ticket){
+        if(!audience.getBag().hasTicket()) { //티켓 이미 갖고있으면 티켓 있다고 표시 추가로 안 해도 되니까
             audience.getBag().setTicket(ticket);
         }
     }
+
 }
