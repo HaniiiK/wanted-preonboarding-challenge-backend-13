@@ -7,12 +7,22 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TheaterService {
+
     private final Theater theater;
 
-    public String enter(){
-        theater.enter(new Audience(new Bag(1000L)),
-                new TicketSeller(new TicketOffice(20000L, new Ticket(100L))));
-        return "Have a good time.";
+    public String enter(Audience audience, TicketSeller ticketSeller){
+        Ticket ticket = ticketSeller.getTicketOffice().getTicket(); //티켓 정보 가져옴
 
+        if(!audience.getBag().hasInvitation() || !audience.getBag().hasTicket()) {
+            audience.getBag().minusAmount(ticket.getFee());
+            if(audience.getBag().getAmount()<0) { //돈이 부족한 경우
+                audience.getBag().plusAmount(ticket.getFee());
+                return "not enough money.";
+            }
+            ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+        }
+
+        theater.enter(audience, ticket);
+        return "Have a good time.";
     }
 }

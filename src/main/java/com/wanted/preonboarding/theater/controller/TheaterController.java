@@ -1,13 +1,10 @@
 package com.wanted.preonboarding.theater.controller;
 
-import com.wanted.preonboarding.cafe.service.CafeService;
 import com.wanted.preonboarding.theater.service.TheaterService;
+import com.wanted.preonboarding.theater.service.handler.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/theater")
@@ -21,7 +18,16 @@ public class TheaterController {
     }
 
     @GetMapping("enter")
-    public String enter(){
-        return theaterService.enter();
+    public String enter(@RequestParam Long money){
+        String answer = "";
+        TicketSeller ticketSeller = new TicketSeller(new TicketOffice(20000L, new Ticket(100L)));
+
+        //초대권 있음
+//        answer = theaterService.enter(new Audience(new Bag(new Invitation(), money)), ticketSeller);
+
+        //초대권 없음
+        answer = theaterService.enter(new Audience(new Bag(money)), ticketSeller);
+
+        return answer;
     }
 }
